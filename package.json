@@ -1,0 +1,37 @@
+{
+  "name": "@hubspot/quote-dev-sdk",
+  "version": "0.1.0",
+  "description": "TypeScript types for HubSpot Commerce Hub quote templates.",
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "scripts": {
+    "build": "tsx ./scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "yarn build",
+    "release": "tsx ./scripts/release.ts release"
+  },
+  "devDependencies": {
+    "@hubspot/npm-scripts": "0.3.0",
+    "@types/node": "20.19.39",
+    "tsx": "4.21.0",
+    "typescript": "5.9.3"
+  }
+}
