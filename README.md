@@ -12,7 +12,7 @@ npm install --save-dev @hubspot/quote-dev-sdk
 
 ## Background
 
-When HubSpot renders a Commerce Hub quote, the quote template has a `quoteTemplateContext` HubL variable in scope. It contains the quote itself and every CRM record associated to it — line items, buyer contacts, buyer and billing companies, the parent deal, quote documents, and signers — **including the custom properties defined on those records in your portal**. You don't need to make CRM API calls from a module to pull any of this; it's already there.
+When HubSpot renders a Commerce Hub quote, the quote template has a `quoteTemplateContext` HubL variable in scope. It exposes a curated subset of HubSpot's built-in properties on the quote and its associated CRM records — already populated, with no API calls needed. The set of fields is fixed: custom properties defined on those records in your portal are not included. If your module needs custom properties — or built-in fields not exposed by `quoteTemplateContext` — fetch them server-side inside your `hublDataTemplate` using the [`crm_object`](https://developers.hubspot.com/docs/cms/reference/hubl/functions#crm_object) and [`crm_associations`](https://developers.hubspot.com/docs/cms/reference/hubl/functions#crm_associations) HubL functions, then pipe the results through to your module.
 
 To get that data into a React module, export a `hublDataTemplate` from the module. It's a HubL string that runs on the server; whatever object it builds becomes the `hublData` prop the React `Component` receives. This SDK types the shape of `quoteTemplateContext` so you can type both sides of that bridge against the same contract.
 
@@ -165,34 +165,6 @@ type BillingFields = Pick<
   'name' | 'amount' | 'hs_recurring_billing_period' | 'hs_term_in_months'
 >;
 ```
-
-## Extending with custom properties
-
-The named fields on the CRM-backed property bags cover HubSpot's built-in fields and are **not exhaustive**. Each type carries a `[key: string]: CrmPropertyValue | undefined` index signature, so any custom property defined in your portal is still accessible at runtime — but it'll come through typed as `unknown`. To get typed access to your custom properties, extend the base types and plug them back into `QuoteTemplateContext`:
-
-```ts
-import type {
-  QuoteTemplateContext,
-  QuoteProperties,
-  LineItemProperties,
-} from '@hubspot/quote-dev-sdk';
-
-interface PortalQuoteProperties extends QuoteProperties {
-  my_industry_vertical?: 'saas' | 'retail' | 'manufacturing';
-  my_contract_renewal_count?: number;
-}
-
-interface PortalLineItemProperties extends LineItemProperties {
-  my_internal_sku?: string;
-}
-
-interface PortalQuoteContext extends QuoteTemplateContext {
-  quote: PortalQuoteProperties;
-  lineItems: PortalLineItemProperties[];
-}
-```
-
-Then use `PortalQuoteContext` wherever you'd use `QuoteTemplateContext` — e.g. as the type of `hublData.quoteContext` in the examples above.
 
 ## Versioning
 

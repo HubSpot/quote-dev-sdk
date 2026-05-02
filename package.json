@@ -1,6 +1,6 @@
 {
   "name": "@hubspot/quote-dev-sdk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "TypeScript types for HubSpot Commerce Hub quote templates.",
   "license": "MIT",
   "main": "./dist/index.js",
