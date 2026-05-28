@@ -4,6 +4,7 @@ export interface QuoteProperties {
   hs_acceptance_method?: string;
   hs_allowed_payment_methods?: string[];
   hs_billing_enabled?: boolean;
+  hs_billing_invoice_checkout?: boolean;
   hs_change_effective_date?: string;
   hs_change_prorating?: boolean;
   hs_clickwrap_accepted_by?: string;
