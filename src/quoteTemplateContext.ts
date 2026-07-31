@@ -2,6 +2,7 @@ export type CrmPropertyValue = unknown;
 
 export interface QuoteProperties {
   hs_acceptance_method?: string;
+  hs_allowed_commerce_payment_methods?: string[];
   hs_allowed_payment_methods?: string[];
   hs_billing_enabled?: boolean;
   hs_billing_invoice_checkout?: boolean;
@@ -43,6 +44,7 @@ export interface QuoteProperties {
   hs_sender_email?: string;
   hs_sender_firstname?: string;
   hs_sender_image_url?: string;
+  hs_sender_jobtitle?: string;
   hs_sender_lastname?: string;
   hs_sender_phone?: string;
   hs_slug?: string;

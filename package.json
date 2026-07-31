@@ -1,7 +1,7 @@
 {
   "name": "@hubspot/quote-dev-sdk",
-  "version": "0.1.2",
-  "description": "TypeScript types for HubSpot Commerce Hub quote templates.",
+  "version": "0.2.0",
+  "description": "TypeScript types and React hooks for HubSpot Commerce Hub quote templates.",
   "license": "MIT",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -28,9 +28,19 @@
     "prepublishOnly": "yarn build",
     "release": "tsx ./scripts/release.ts release"
   },
+  "peerDependencies": {
+    "react": "^17.0.0 || ^18.0.0 || ^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
   "devDependencies": {
     "@hubspot/npm-scripts": "0.3.0",
     "@types/node": "20.19.39",
+    "@types/react": "18.3.12",
+    "react": "18.3.1",
     "tsx": "4.21.0",
     "typescript": "5.9.3"
   }

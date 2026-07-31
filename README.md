@@ -170,6 +170,43 @@ type BillingFields = Pick<
 
 Follows [semver](https://semver.org/). Adding optional fields is a minor release; adding a required field to `QuoteTemplateContext` or narrowing an existing field is a major release.
 
+## Releasing
+
+### Stable release
+
+From `master`, run the release script:
+
+```sh
+yarn release
+```
+
+This bumps the version, builds, publishes to npm with the `latest` tag, and creates a git tag.
+
+### Beta release
+
+Use a beta prerelease to let consumers test unreleased changes without affecting `latest`.
+
+1. Set a beta version in `package.json` using the `-beta.N` suffix:
+
+```sh
+npm version 0.2.0-beta.0 --no-git-tag-version
+```
+
+2. Build and publish with the `--tag beta` flag so it doesn't become `latest`:
+
+```sh
+yarn build
+npm publish --tag beta
+```
+
+3. Consumers install the beta with:
+
+```sh
+npm install @hubspot/quote-dev-sdk@beta
+```
+
+You can publish a beta from any branch — npm doesn't require `master`. Increment the beta number (`beta.1`, `beta.2`, ...) for subsequent pre-releases at the same version.
+
 ## License
 
 MIT
