@@ -2,7 +2,7 @@ export type AcceptanceMethod = 'clickwrap' | 'esignature' | 'print_and_sign';
 
 export type PaymentStatus = 'PAID' | 'PROCESSING' | 'PENDING';
 
-export type QuoteFeature = 'acceptance' | 'payments';
+export type QuoteFeature = 'acceptance' | 'payments' | 'totals' | 'pdf';
 
 export interface QuoteSigner {
   name?: string;
@@ -24,6 +24,10 @@ export interface AcceptanceData {
   accepted: boolean;
   signers: QuoteSigner[];
   markedSignedBy?: MarkedSignedBy;
+}
+
+export interface QuotePdfData {
+  canReportPdfStale: boolean;
 }
 
 export interface PaymentData {

@@ -1,9 +1,12 @@
 import { ControlState, QuoteFeature } from '../types/api';
 import { QUOTE_EVENT, QUOTE_FEATURE } from './constants';
 
+type ActionFn = (...args: any[]) => any;
+
 interface HsQuoteGlobal {
   eventCache: Record<string, unknown>;
-  controls: Record<QuoteFeature, ControlState>;
+  controls: Partial<Record<QuoteFeature, ControlState>>;
+  actions: Record<string, ActionFn>;
 }
 
 declare global {
@@ -26,6 +29,7 @@ const getGlobal = (): HsQuoteGlobal | null => {
         [QUOTE_FEATURE.ACCEPTANCE]: { ...DEFAULT_CONTROL_STATE },
         [QUOTE_FEATURE.PAYMENTS]: { ...DEFAULT_CONTROL_STATE },
       },
+      actions: {},
     };
   }
   return window.__hsQuote;
@@ -51,6 +55,10 @@ export const getStateEventName = (feature: QuoteFeature): string | null => {
       return QUOTE_EVENT.ACCEPTANCE;
     case QUOTE_FEATURE.PAYMENTS:
       return QUOTE_EVENT.PAYMENTS;
+    case QUOTE_FEATURE.TOTALS:
+      return QUOTE_EVENT.TOTALS;
+    case QUOTE_FEATURE.PDF:
+      return QUOTE_EVENT.PDF;
     default:
       console.warn(
         `[hs-quote] Unsupported quote feature: ${String(feature)}`
@@ -70,7 +78,7 @@ export const readEventCache = <T>(name: string | null): T | null => {
 export const readControl = (feature: QuoteFeature): ControlState => {
   const g = getGlobal();
   if (!g) return { ...DEFAULT_CONTROL_STATE };
-  return g.controls[feature];
+  return g.controls[feature] ?? { ...DEFAULT_CONTROL_STATE };
 };
 
 export const writeControl = (
@@ -81,10 +89,25 @@ export const writeControl = (
   if (!g) return;
   const eventName = getControlEventName(feature);
   if (!eventName) return;
-  // Freeze so a listener that mutates `detail` can't corrupt the cached copy.
   const frozen = Object.freeze({ ...state });
   g.controls[feature] = frozen;
   window.dispatchEvent(
     new CustomEvent<ControlState>(eventName, { detail: frozen })
   );
+};
+
+export const invokeAction = <T>(name: string): T => {
+  const g = getGlobal();
+  const fn = g?.actions[name];
+  if (!fn) {
+    console.warn(`[hs-quote] Action "${name}" not registered`);
+    return Promise.resolve(null) as T;
+  }
+  return fn() as T;
+};
+
+export const writeAction = (name: string, fn: ActionFn): void => {
+  const g = getGlobal();
+  if (!g) return;
+  g.actions[name] = fn;
 };

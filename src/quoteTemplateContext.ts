@@ -165,10 +165,94 @@ export interface SignerProperties {
   avatarUrl?: string;
 }
 
+export type BillingFrequency =
+  | 'one_time'
+  | 'weekly'
+  | 'biweekly'
+  | 'monthly'
+  | 'quarterly'
+  | 'per_six_months'
+  | 'annually'
+  | 'per_two_years'
+  | 'per_three_years'
+  | 'per_four_years'
+  | 'per_five_years';
+
+export interface QuoteTotalsSubTotal {
+  subTotal: number;
+  discountAmount: number;
+  preDiscountSubTotal: number;
+}
+
+export interface QuoteTotalsDiscountSubTotal {
+  preDiscountSubTotal: number;
+  discountSubTotal: number;
+  postDiscountSubTotal: number;
+}
+
+export interface QuoteTotalsTaxSubTotal {
+  preTaxSubTotal: number;
+  taxSubTotal: number;
+  postTaxSubTotal: number;
+}
+
+export interface QuoteTotalsFutureCharge {
+  date: {
+    delayType: string;
+    relativeDelays: { delayNumberOfUnits: number; delayType: string }[];
+    dateTimestamp?: number;
+  };
+  numberOfPayments: number | null;
+  amount: number;
+  billingFrequency: BillingFrequency;
+}
+
+export interface QuoteTotalsTaxBreakdown {
+  label: string;
+  percentageIfUniform?: number;
+  amount: number;
+}
+
+export interface QuoteTotals {
+  dueNowAmount: number;
+  oneTimeInitialPaymentTotal: number;
+  subTotals: Partial<Record<BillingFrequency, QuoteTotalsSubTotal>>;
+  discountSubTotals: Partial<
+    Record<BillingFrequency, QuoteTotalsDiscountSubTotal>
+  >;
+  taxSubTotals: Partial<Record<BillingFrequency, QuoteTotalsTaxSubTotal>>;
+  futureCharges: QuoteTotalsFutureCharge[];
+  taxBreakdown: QuoteTotalsTaxBreakdown[];
+}
+
+export interface QuoteTierRange {
+  start: number;
+  end?: number;
+}
+
+export interface QuoteTierPrice {
+  index: number;
+  price: number;
+  currency?: string;
+}
+
+export interface QuoteTierBreakdown {
+  tierRange?: QuoteTierRange;
+  tierPrice?: QuoteTierPrice;
+  quantity: number;
+  amount: number;
+}
+
+export interface QuoteTierSummary {
+  total: number;
+  breakdowns: QuoteTierBreakdown[];
+}
+
 export interface QuoteTemplateContext {
   quote: QuoteProperties;
   deal: DealProperties;
   lineItems: LineItemProperties[];
+  lineItemTiers?: Record<string, QuoteTierSummary>;
   buyerContacts: ContactProperties[];
   buyerCompany: CompanyProperties;
   billingContact: ContactProperties;
@@ -176,4 +260,5 @@ export interface QuoteTemplateContext {
   quoteDocuments: QuoteDocumentProperties[];
   signers: SignerProperties[];
   counterSigners: SignerProperties[];
+  quoteTotals?: QuoteTotals;
 }
