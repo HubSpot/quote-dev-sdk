@@ -14,7 +14,9 @@ export const BILLING_FREQUENCY_ORDER: readonly BillingFrequency[] = [
   'per_five_years',
 ] as const;
 
-export const BILLING_FREQUENCY_LABELS: Readonly<Record<BillingFrequency, string>> = {
+export const BILLING_FREQUENCY_LABELS: Readonly<
+  Record<BillingFrequency, string>
+> = {
   one_time: 'One-time',
   weekly: 'Weekly',
   biweekly: 'Every 2 weeks',

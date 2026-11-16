@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ControlState,
   DisableOptions,
@@ -21,17 +21,21 @@ export const useFeatureControl = (
 ): FeatureControl => {
   const eventName = getControlEventName(feature);
 
-  const [state, setState] = useState<ControlState>(() => readControl(feature));
+  const [disabled, setDisabled] = useState(() => readControl(feature).disabled);
+  const [reason, setReason] = useState(() => readControl(feature).reason);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !eventName) return;
 
-    setState(readControl(feature));
+    const current = readControl(feature);
+    setDisabled(current.disabled);
+    setReason(current.reason);
 
     const handler = (event: Event) => {
       const detail = (event as CustomEvent<ControlState>).detail;
       if (!detail) return;
-      setState(detail);
+      setDisabled(detail.disabled);
+      setReason(detail.reason);
     };
 
     window.addEventListener(eventName, handler);
@@ -39,10 +43,16 @@ export const useFeatureControl = (
   }, [eventName, feature]);
 
   const canDisableFn = options?.canDisable;
+  const canDisableRef = useRef(canDisableFn);
+
+  useEffect(() => {
+    canDisableRef.current = canDisableFn;
+  }, [canDisableFn]);
 
   const disable = useCallback(
     (disableOptions?: DisableOptions): ControlState => {
-      if (canDisableFn && !canDisableFn()) {
+      const canDisable = canDisableRef.current;
+      if (canDisable && !canDisable()) {
         console.warn(
           `[hs-quote] Cannot disable "${feature}" in its current state.`
         );
@@ -55,7 +65,7 @@ export const useFeatureControl = (
       writeControl(feature, next);
       return next;
     },
-    [feature, canDisableFn]
+    [feature]
   );
 
   const enable = useCallback((): ControlState => {
@@ -64,10 +74,13 @@ export const useFeatureControl = (
     return next;
   }, [feature]);
 
-  return {
-    isDisabled: state.disabled,
-    disabledReason: state.reason,
-    disable,
-    enable,
-  };
+  return useMemo(
+    () => ({
+      isDisabled: disabled,
+      disabledReason: reason,
+      disable,
+      enable,
+    }),
+    [disabled, reason, disable, enable]
+  );
 };

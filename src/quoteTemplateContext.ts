@@ -248,11 +248,30 @@ export interface QuoteTierSummary {
   breakdowns: QuoteTierBreakdown[];
 }
 
+export interface BundleRollup {
+  acv: number | null;
+  amount: number | null;
+  arr: number | null;
+  marginAcv: number | null;
+  marginArr: number | null;
+  marginMrr: number | null;
+  marginTcv: number | null;
+  mrr: number | null;
+  preDiscountAmount: number | null;
+  price: number | null;
+  recurringBillingFrequency: BillingFrequency | null;
+  tcv: number | null;
+  termInMonths: number | null;
+  totalDiscount: number | null;
+}
+
 export interface QuoteTemplateContext {
   quote: QuoteProperties;
   deal: DealProperties;
   lineItems: LineItemProperties[];
   lineItemTiers?: Record<string, QuoteTierSummary>;
+  // Keyed by the bundle PARENT line item's id; CRM zeroes that item's own price/amount.
+  bundleRollups?: Record<string, BundleRollup>;
   buyerContacts: ContactProperties[];
   buyerCompany: CompanyProperties;
   billingContact: ContactProperties;
