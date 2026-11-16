@@ -6,17 +6,40 @@ export {
 export type {
   AcceptanceData,
   AcceptanceMethod,
+  BuyerBillingCompany,
+  BuyerBillingInfo,
+  BuyerBillingInfoInput,
+  BuyerDetailsData,
+  BuyerDetailsInput,
+  BuyerDetailsRules,
+  BuyerSoldToCompany,
+  BuyerSoldToCompanyInput,
+  BuyerTaxId,
   ControlState,
   DisableOptions,
   FeatureControl,
   MarkedSignedBy,
   PaymentData,
   PaymentStatus,
+  QuoteConfig,
   QuoteHookResult,
   QuotePdfData,
   QuoteSigner,
+  TaxType,
 } from './types/api';
-export { QUOTE_EVENT, QUOTE_ACTION } from './events/constants';
+export {
+  QUOTE_EVENT,
+  QUOTE_ACTION,
+  PDF_SIGNAL_ATTR,
+  PDF_SIGNAL_NAME_ATTR,
+} from './events/constants';
+export { getTaxTypes, getBuyerDetailsRules } from './buyerDetails';
+export {
+  QuoteError,
+  QUOTE_ERROR_CODE,
+  isQuoteError,
+  type QuoteErrorCode,
+} from './errors';
 export {
   useQuoteAcceptance,
   type QuoteAcceptanceResult,
@@ -35,3 +58,12 @@ export {
   type QuotePdfActions,
   type QuotePdfResult,
 } from './hooks/useQuotePdf';
+export {
+  useQuoteBuyerDetails,
+  type QuoteBuyerDetailsActions,
+  type QuoteBuyerDetailsResult,
+} from './hooks/useQuoteBuyerDetails';
+export {
+  DeferPdfCapture,
+  type DeferPdfCaptureProps,
+} from './components/DeferPdfCapture';

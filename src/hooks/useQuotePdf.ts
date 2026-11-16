@@ -14,8 +14,9 @@ export interface QuotePdfResult extends QuoteHookResult<QuotePdfData> {
 }
 
 export const useQuotePdf = (): QuotePdfResult => {
-  const { loading, error, data } =
-    useFeatureStatus<QuotePdfData>(QUOTE_FEATURE.PDF);
+  const { loading, error, data } = useFeatureStatus<QuotePdfData>(
+    QUOTE_FEATURE.PDF
+  );
 
   const actions = useMemo<QuotePdfActions>(
     () => ({

@@ -1,9 +1,5 @@
 import { useCallback } from 'react';
-import {
-  FeatureControl,
-  PaymentData,
-  QuoteHookResult,
-} from '../types/api';
+import { FeatureControl, PaymentData, QuoteHookResult } from '../types/api';
 import { QUOTE_FEATURE } from '../events/constants';
 import { useFeatureControl } from './useFeatureControl';
 import { useFeatureStatus } from './useFeatureStatus';

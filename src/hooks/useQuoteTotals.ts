@@ -16,9 +16,15 @@ export type QuoteTotalsResult = QuoteHookResult<QuoteTotals> & {
 export const useQuoteTotals = (): QuoteTotalsResult => {
   const status = useFeatureStatus<QuoteTotals>(QUOTE_FEATURE.TOTALS);
 
-  const actions = useMemo(() => ({
-    recalculate: () => invokeAction<Promise<QuoteTotals | null>>(QUOTE_ACTION.RECALCULATE_TOTALS),
-  }), []);
+  const actions = useMemo(
+    () => ({
+      recalculate: () =>
+        invokeAction<Promise<QuoteTotals | null>>(
+          QUOTE_ACTION.RECALCULATE_TOTALS
+        ),
+    }),
+    []
+  );
 
   return { ...status, actions };
 };
